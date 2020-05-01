@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout}">
+<head>
+    <meta charset="UTF-8">
+    <title>Editor</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <main>
+        <form th:action="@{/editor/save}" th:object="${art_save_dto}" method="post">
+            <label>
+                Title
+                <input type="text" name="title" autofocus required>
+            </label>
+            <label>
+                <textarea name="content" required></textarea>
+            </label>
+            <input type="submit" value="Save">
+        </form>
+    </main>
+</div>
+</body>
+</html>

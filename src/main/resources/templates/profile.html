@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout}">
+<head>
+    <meta charset="UTF-8">
+    <title>Profile</title>
+</head>
+<body>
+    <div layout:fragment="content">
+        <main>
+            <h3 th:text="${user.username}"></h3>
+            <form th:action="@{/profile/update}" th:object="${user_dto}" method="post">
+                <label>
+                    Username
+                    <input name="username" th:value="${user.username}">
+                </label>
+                <label>
+                    First Name
+                    <input name="firstName" th:value="${user.firstName}">
+                </label>
+                <label>
+                    Last Name
+                    <input name="lastName" th:value="${user.lastName}">
+                </label>
+                <input type="submit" value="Update">
+            </form>
+            <p>Account was created at <span th:text="${#temporals.format(user.createdAt, 'dd-MM-yyyy HH:mm')}"></span></p>
+            <hr>
+            <a th:href="@{/logout}">Sign out</a>
+        </main>
+    </div>
+</body>
+</html>
