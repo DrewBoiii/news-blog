@@ -9,6 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
 @Controller
@@ -42,7 +43,7 @@ public class UserController {
         com.example.newsblog.persistence.model.User user = userService.getByUsername(authUser.getUsername());
         model.addAttribute("user", user);
         model.addAttribute("user_dto", new UserProfileDto());
-        return "profile";
+        return "private_profile";
     }
 
     @PostMapping("/profile/update")
@@ -52,6 +53,13 @@ public class UserController {
         userProfileDto.setId(user.getId());
         userService.update(userProfileDto);
         return "redirect:/profile";
+    }
+
+    @GetMapping("/profile/{username}")
+    public String getPublicProfile(@PathVariable("username") String username, Model model) {
+        com.example.newsblog.persistence.model.User user = userService.getByUsername(username);
+        model.addAttribute("user", user);
+        return "public_profile";
     }
 
 }

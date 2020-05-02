@@ -28,7 +28,7 @@
                            th:value="${user.lastName}">
                 </label>
                 <input type="date" id="start" name="birth"
-                       th:value="${#temporals.format(user.birth.now(), 'yyyy-MM-dd')}"
+                       th:value="${#temporals.format(user.birth, 'yyyy-MM-dd')}"
                        th:min="${#temporals.format(user.birth.now().minusYears(100), 'yyyy-MM-dd')}"
                        th:max="${#temporals.format(user.birth.now(), 'yyyy-MM-dd')}">
                 <input type="submit" value="Update">

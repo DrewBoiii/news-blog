@@ -13,10 +13,15 @@
             <h3 th:text="${article.title}"></h3>
             <p th:text="${article.content}"></p>
             <p>
-                Created at
-                <span th:text="${#temporals.format(article.createdAt, 'dd-MM-yyyy HH:mm')}"></span>
-                By
-                <span th:text="${article.user.username}"></span>
+                Edited at
+                <span th:text="${#temporals.format(article.editedAt, 'dd-MM-yyyy HH:mm')}"></span>
+                by
+                <a th:href="@{|/profile/${article.user.username}|}">
+                    <span th:text="${article.user.username}"></span>
+                </a>
+                <div th:if="${#authentication.name.equals(article.user.username)}">
+                    <a th:href="@{|/articles/${article.id}/edit|}">Edit</a>
+                </div>
             </p>
         </main>
     </div>

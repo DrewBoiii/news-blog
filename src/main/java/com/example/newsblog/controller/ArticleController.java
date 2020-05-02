@@ -35,7 +35,7 @@ public class ArticleController {
     @GetMapping("/editor")
     public String getEditorPage(Model model, @AuthenticationPrincipal User user) {
         model.addAttribute("art_save_dto", new ArticleSaveDto());
-        return "editor";
+        return "editor_save";
     }
 
     @PostMapping("/editor/save")
@@ -47,13 +47,23 @@ public class ArticleController {
         return "redirect:/articles/" + id;
     }
 
-    @PostMapping("/articles/{id}/update")
+    @GetMapping("/articles/{id}/edit")
+    public String getArticleEditor(Model model,
+                                   @PathVariable("id") Long id,
+                                   @AuthenticationPrincipal User authUser) {
+        Article article = articleService.getById(id);
+        model.addAttribute("article", article);
+        model.addAttribute("art_upd_dto", new ArticleUpdateDto());
+        return "editor_update";
+    }
+
+    @PostMapping("/articles/{id}/edit")
     public String updateArticle(@PathVariable("id") Long id,
                                 @ModelAttribute("art_upd_dto") ArticleUpdateDto articleUpdateDto,
                                 @AuthenticationPrincipal User authUser) {
         articleUpdateDto.setId(id);
         articleService.update(articleUpdateDto);
-        return "redirect:/editor";
+        return "redirect:/articles/" + id;
     }
 
 }

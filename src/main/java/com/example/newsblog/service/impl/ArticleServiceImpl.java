@@ -10,6 +10,7 @@ import com.example.newsblog.service.ArticleService;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -35,6 +36,7 @@ public class ArticleServiceImpl implements ArticleService {
         Article article = articleRepository.findById(articleUpdateDto.getId()).orElse(null);
         article.setTitle(articleUpdateDto.getTitle());
         article.setContent(articleUpdateDto.getContent());
+        article.setEditedAt(LocalDateTime.now());
         articleRepository.save(article);
     }
 

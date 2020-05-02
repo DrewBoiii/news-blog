@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout}">
+<head>
+    <meta charset="UTF-8">
+    <title>Editor</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <main>
+        <form th:action="@{|/articles/${article.id}/edit|}" th:object="${art_upd_dto}" method="post">
+            <label>
+                Title
+                <input type="text" name="title"
+                       th:value="${article.title}"
+                       autofocus required>
+            </label>
+            <label>
+                Content
+                <textarea name="content"
+                          th:text="${article.content}"
+                          required>
+                </textarea>
+            </label>
+            <input type="submit" value="Update">
+        </form>
+        <button type="button" name="delete" value="Delete"></button>
+    </main>
+</div>
+</body>
+</html>

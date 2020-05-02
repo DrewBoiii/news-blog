@@ -20,6 +20,8 @@ public class Article extends AbstractEntity {
 
     private String content;
 
+    private LocalDateTime editedAt;
+
     private LocalDateTime createdAt;
 
     @ManyToOne(fetch = FetchType.EAGER)
@@ -28,6 +30,7 @@ public class Article extends AbstractEntity {
     @PrePersist
     public void createdAt() {
         this.createdAt = LocalDateTime.now();
+        this.editedAt = LocalDateTime.now();
     }
 
 }

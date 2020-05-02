@@ -27,10 +27,13 @@
                 <h3 th:text="${article.title}"></h3>
                 <p th:text="${article.content}"></p>
                 <a th:href="@{|/articles/${article.id}|}">Read</a>
-                <p>Posted
+                <p>
+                    Posted
                     <span th:text="${#temporals.format(article.createdAt, 'dd-MM-yyyy')}"></span>
-                    By
-                    <span th:text="${article.user.username}"></span>
+                    by
+                    <a th:href="@{|/profile/${article.user.username}|}">
+                        <span th:text="${article.user.username}"></span>
+                    </a>
                 </p>
                 <hr>
             </div>
