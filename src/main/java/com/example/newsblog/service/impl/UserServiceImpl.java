@@ -11,6 +11,9 @@ import com.example.newsblog.util.RoleConstants;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -48,7 +51,9 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findById(userProfileDto.getId()).orElse(null);
         user.setFirstName(userProfileDto.getFirstName());
         user.setLastName(userProfileDto.getLastName());
-        user.setBirth(userProfileDto.getBirth());
+        LocalDate date = LocalDate.parse(userProfileDto.getBirth());
+        LocalDateTime dateTime = LocalDateTime.of(date, LocalTime.MIN);
+        user.setBirth(dateTime);
         userRepository.save(user);
     }
 
