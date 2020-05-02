@@ -4,8 +4,8 @@ import com.example.newsblog.persistence.dto.article.ArticleCriteria;
 import com.example.newsblog.persistence.dto.article.ArticleSaveDto;
 import com.example.newsblog.persistence.dto.article.ArticleUpdateDto;
 import com.example.newsblog.persistence.model.Article;
-
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 public interface ArticleService {
 
@@ -13,7 +13,7 @@ public interface ArticleService {
     void update(ArticleUpdateDto articleUpdateDto);
     void deleteById(Long id);
     Article getById(Long id);
-    List<Article> getAll();
-    List<Article> getAllByCriteria(ArticleCriteria criteria);
+    Page<Article> getAll(Pageable pageable);
+    Page<Article> getAll(ArticleCriteria criteria, Pageable pageable);
 
 }

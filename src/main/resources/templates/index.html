@@ -11,7 +11,9 @@
     <div layout:fragment="content">
         <main>
             <h1>Articles</h1>
-            <form th:action="@{/home}" th:object="${criteria}" method="get">
+
+            <!--            filter-->
+            <form th:action="@{/home}" th:object="${criteria}">
                 <label>
                     Title
                     <input name="title" type="text" th:value="${criteria.title}">
@@ -20,10 +22,20 @@
                     Publisher
                     <input name="username" type="text" th:value="${criteria.username}">
                 </label>
+                <label>
+                    Sort by
+                    <select name="sort">
+                        <option value="" selected></option>
+                        <option value="createdAt">Created at</option>
+                        <option value="title">Title</option>
+                    </select>
+                </label>
                 <input type="submit" value="Filter">
             </form>
-            <h3 th:if="${articles.size() == 0}">Seems like there is no articles :(</h3>
-            <div th:each="article : ${articles}">
+
+            <!--            page content is articles-->
+            <h3 th:if="${page.content.size() == 0}">Seems like there is no articles :(</h3>
+            <div th:each="article : ${page.content}">
                 <h3 th:text="${article.title}"></h3>
                 <p th:text="${article.content}"></p>
                 <a th:href="@{|/articles/${article.id}|}">Read</a>
@@ -36,6 +48,22 @@
                     </a>
                 </p>
                 <hr>
+            </div>
+
+            <!--            pagination-->
+            <div class="pagination-div">
+                <span th:if="${page.hasPrevious()}">
+                    <a th:href="@{|/home?page=${page.number - 1}&sort=${criteria.sort}|}">Previous</a>
+                </span>
+                <th:block th:each="i: ${#numbers.sequence(0, page.totalPages - 1)}">
+                    <span th:if="${page.number == i}" class="selected">[[${i}+1]]</span>
+                    <span th:unless="${page.number == i}">
+                        <a th:href="@{|/home?page=${i}&sort=${criteria.sort}|}">[[${i}+1]]</a>
+                    </span>
+                </th:block>
+                <span th:if="${page.hasNext()}">
+                    <a th:href="@{|/home?page=${page.number + 1}&sort=${criteria.sort}|}">Next</a>
+                </span>
             </div>
         </main>
     </div>

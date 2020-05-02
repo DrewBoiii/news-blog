@@ -7,6 +7,8 @@ import com.example.newsblog.persistence.dto.article.ArticleSaveDto;
 import com.example.newsblog.persistence.dto.article.ArticleUpdateDto;
 import com.example.newsblog.persistence.model.Article;
 import com.example.newsblog.service.ArticleService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
@@ -51,16 +53,17 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     @Override
-    public List<Article> getAll() {
-        return articleRepository.findAll();
+    public Page<Article> getAll(Pageable pageable) {
+        return articleRepository.findAll(pageable);
     }
 
     @Override
-    public List<Article> getAllByCriteria(ArticleCriteria criteria) {
+    public Page<Article> getAll(ArticleCriteria criteria, Pageable pageable) {
         return articleRepository.findAll(
                 Specification
                         .where(ArticleSpecification.getArticleByUsername(criteria.getUsername()))
-                        .and(ArticleSpecification.getArticlesByTitle(criteria.getTitle()))
+                        .and(ArticleSpecification.getArticlesByTitle(criteria.getTitle())),
+                pageable
         );
     }
 }
