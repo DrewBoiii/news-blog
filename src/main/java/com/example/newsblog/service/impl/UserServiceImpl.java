@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -33,16 +34,12 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void save(RegistrationDto registrationDto) {
-        Role role = new Role();
-        role.setName(RoleConstants.USER_ROLE);
-        roleService.save(role);
-        Set<Role> roles = new HashSet<>();
-        roles.add(role);
         User user = new User();
         user.setUsername(registrationDto.getUsername());
         user.setPassword(passwordEncoder.encode(registrationDto.getPassword()));
         user.setEmail(registrationDto.getEmail());
-        user.setRoles(roles);
+        user.setRoles(Collections.singleton(roleService.getByName(RoleConstants.USER_ROLE)));
+        user.setBirth(LocalDateTime.now());
         userRepository.save(user);
     }
 

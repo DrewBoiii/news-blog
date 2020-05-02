@@ -26,7 +26,9 @@
             </label>
             <input type="submit" value="Update">
         </form>
-        <button type="button" name="delete" value="Delete"></button>
+        <form th:action="@{|/articles/${article.id}/delete|}" method="post">
+            <input type="submit" onclick="alert('Are you sure about that?')" value="Delete">
+        </form>
     </main>
 </div>
 </body>

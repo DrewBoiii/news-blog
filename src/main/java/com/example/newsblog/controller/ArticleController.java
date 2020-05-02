@@ -66,4 +66,11 @@ public class ArticleController {
         return "redirect:/articles/" + id;
     }
 
+    @PostMapping("/articles/{id}/delete")
+    public String updateArticle(@PathVariable("id") Long id,
+                                @AuthenticationPrincipal User authUser) {
+        articleService.deleteById(id);
+        return "redirect:/home";
+    }
+
 }
