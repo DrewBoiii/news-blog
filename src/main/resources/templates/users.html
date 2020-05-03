@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout}">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <div layout:fragment="content">
+        <main>
+            <h1>Users</h1>
+
+            <!--            filter-->
+            <form th:action="@{/users}" th:object="${criteria}">
+                <label>
+                    Username
+                    <input name="username" type="text" th:value="${criteria.username}">
+                </label>
+                <label>
+                    First name
+                    <input name="firstName" type="text" th:value="${criteria.firstName}">
+                </label>
+                <label>
+                    Last name
+                    <input name="lastName" type="text" th:value="${criteria.lastName}">
+                </label>
+                <label>
+                    Sort by
+                    <select name="sort">
+                        <option value="createdAt" selected>Created at</option>
+                        <option value="username">Username</option>
+                        <option value="firstName">First name</option>
+                        <option value="lastName">Last name</option>
+                        <option value="birth">Age</option>
+                    </select>
+                    Order direction
+                    <select name="order">
+                        <option value="asc">Asc</option>
+                        <option value="desc" selected>Desc</option>
+                    </select>
+                </label>
+                <input type="submit" value="Filter">
+            </form>
+
+            <!--            users-->
+            <h3 th:if="${page.content.size() == 0}">Seems like there is no users :(</h3>
+            <div th:each="user : ${page.content}">
+                <h3 th:text="${user.username}"></h3>
+                <p th:text="${user.firstName}"></p>
+                <p th:text="${user.lastName}"></p>
+                <p><span th:text="${user.birth.now().year - user.birth.year}"></span> years old</p>
+                <p>
+                    Registered
+                    <span th:text="${#temporals.format(user.createdAt, 'dd-MM-yyyy')}"></span>
+                </p>
+                <h5>Roles</h5>
+                <div th:each="role : ${user.roles}">
+                    <p th:text="${role.name}"></p>
+                </div>
+                <a th:href="@{|/home/${user.username}|}">Profile</a>
+                <hr>
+            </div>
+
+            <!--            pagination-->
+            <div class="pagination-div">
+                <span th:if="${page.hasPrevious()}">
+                    <a th:href="@{|/users?page=${page.number - 1}&sort=${criteria.sort}|}">Previous</a>
+                </span>
+                <th:block th:each="i: ${#numbers.sequence(0, page.totalPages - 1)}">
+                    <span th:if="${page.number == i}" class="selected">[[${i}+1]]</span>
+                    <span th:unless="${page.number == i}">
+                        <a th:href="@{|/users?page=${i}&sort=${criteria.sort}|}">[[${i}+1]]</a>
+                    </span>
+                </th:block>
+                <span th:if="${page.hasNext()}">
+                    <a th:href="@{|/users?page=${page.number + 1}&sort=${criteria.sort}|}">Next</a>
+                </span>
+            </div>
+        </main>
+    </div>
+</body>
+</html>

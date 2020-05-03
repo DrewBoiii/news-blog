@@ -1,38 +1,45 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout}">
 <head>
     <meta charset="UTF-8">
     <title>Registration</title>
 </head>
 <body>
-    <form th:action="@{/registration}" method="post" th:object="${user}">
-        <label>
-            Username
-            <input type="text" name="username" th:field="*{username}"
-                   autofocus required>
-        </label>
-        <label>
-            Email
-            <input type="email" name="email" th:field="*{email}"
-                   required>
-        </label>
-        <label>
-            Password
-            <input type="password" name="password" th:field="*{password}"
-                   required
-                   title="The password should have at least one upper case, one lower case, one special char
-                       and length should be 10 characters long"
-                   pattern="^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*?[#?!@$%^&*-]).{10,128}$">
-        </label>
-        <label>
-            Confirm Password
-            <input type="password" name="confirm" th:field="*{confirm}"
-                   required
-                   title="The password should have at least one upper case, one lower case, one special char
-                       and length should be 10 characters long"
-                   pattern="^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*?[#?!@$%^&*-]).{10,128}$">
-        </label>
-        <input type="submit" value="Sign Up">
-    </form>
+    <div layout:fragment="content">
+        <main>
+            <form th:action="@{/registration}" method="post" th:object="${user}">
+                <label>
+                    Username
+                    <input type="text" name="username" th:field="*{username}"
+                           autofocus required>
+                </label>
+                <label>
+                    Email
+                    <input type="email" name="email" th:field="*{email}"
+                           required>
+                </label>
+                <label>
+                    Password
+                    <input type="password" name="password" th:field="*{password}"
+                           required
+                           title="The password should have at least one upper case, one lower case, one special char
+                               and length should be 10 characters long"
+                           pattern="^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*?[#?!@$%^&*-]).{10,128}$">
+                </label>
+                <label>
+                    Confirm Password
+                    <input type="password" name="confirm" th:field="*{confirm}"
+                           required
+                           title="The password should have at least one upper case, one lower case, one special char
+                               and length should be 10 characters long"
+                           pattern="^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*?[#?!@$%^&*-]).{10,128}$">
+                </label>
+                <input type="submit" value="Sign Up">
+            </form>
+        </main>
+    </div>
 </body>
 </html>

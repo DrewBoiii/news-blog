@@ -5,6 +5,7 @@ import com.example.newsblog.persistence.dto.article.ArticleUpdateDto;
 import com.example.newsblog.persistence.model.Article;
 import com.example.newsblog.service.ArticleService;
 import com.example.newsblog.service.UserService;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Controller;
@@ -17,8 +18,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 @Controller
 public class ArticleController {
 
-    private ArticleService articleService;
-    private UserService userService;
+    private final ArticleService articleService;
+    private final UserService userService;
 
     public ArticleController(ArticleService articleService, UserService userService) {
         this.articleService = articleService;
@@ -33,12 +34,14 @@ public class ArticleController {
     }
 
     @GetMapping("/editor")
+    @PreAuthorize("hasAuthority('user')")
     public String getEditorPage(Model model, @AuthenticationPrincipal User user) {
         model.addAttribute("art_save_dto", new ArticleSaveDto());
         return "editor_save";
     }
 
     @PostMapping("/editor/save")
+    @PreAuthorize("hasAuthority('user')")
     public String saveArticle(@ModelAttribute("art_save_dto") ArticleSaveDto articleSaveDto,
                               @AuthenticationPrincipal User authUser) {
         com.example.newsblog.persistence.model.User user = userService.getByUsername(authUser.getUsername());
@@ -48,6 +51,7 @@ public class ArticleController {
     }
 
     @GetMapping("/articles/{id}/edit")
+    @PreAuthorize("hasAuthority('user')")
     public String getArticleEditor(Model model,
                                    @PathVariable("id") Long id,
                                    @AuthenticationPrincipal User authUser) {
@@ -58,6 +62,7 @@ public class ArticleController {
     }
 
     @PostMapping("/articles/{id}/edit")
+    @PreAuthorize("hasAuthority('user')")
     public String updateArticle(@PathVariable("id") Long id,
                                 @ModelAttribute("art_upd_dto") ArticleUpdateDto articleUpdateDto,
                                 @AuthenticationPrincipal User authUser) {
@@ -67,6 +72,7 @@ public class ArticleController {
     }
 
     @PostMapping("/articles/{id}/delete")
+    @PreAuthorize("hasAuthority('user')")
     public String updateArticle(@PathVariable("id") Long id,
                                 @AuthenticationPrincipal User authUser) {
         articleService.deleteById(id);

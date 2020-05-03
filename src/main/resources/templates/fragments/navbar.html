@@ -14,8 +14,11 @@
                     <li>
                         <a th:href="@{/home}">Home</a>
                     </li>
-                    <li>
+                    <li sec:authorize="hasAuthority('user')">
                         <a th:href="@{/editor}">Add</a>
+                    </li>
+                    <li sec:authorize="hasAuthority('admin')">
+                        <a th:href="@{/users}">Users</a>
                     </li>
                     <li sec:authorize="isAnonymous()">
                         <a th:href="@{/login}">Sign in</a>

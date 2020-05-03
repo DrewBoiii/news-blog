@@ -1,6 +1,6 @@
 package com.example.newsblog.service;
 
-import com.example.newsblog.persistence.dto.article.ArticleCriteria;
+import com.example.newsblog.persistence.dto.article.ArticleCriteriaDto;
 import com.example.newsblog.persistence.dto.article.ArticleSaveDto;
 import com.example.newsblog.persistence.dto.article.ArticleUpdateDto;
 import com.example.newsblog.persistence.model.Article;
@@ -14,6 +14,6 @@ public interface ArticleService {
     void deleteById(Long id);
     Article getById(Long id);
     Page<Article> getAll(Pageable pageable);
-    Page<Article> getAll(ArticleCriteria criteria, Pageable pageable);
+    Page<Article> getAll(ArticleCriteriaDto criteria, Pageable pageable);
 
 }

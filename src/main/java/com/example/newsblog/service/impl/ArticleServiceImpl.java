@@ -1,6 +1,6 @@
 package com.example.newsblog.service.impl;
 
-import com.example.newsblog.persistence.dto.article.ArticleCriteria;
+import com.example.newsblog.persistence.dto.article.ArticleCriteriaDto;
 import com.example.newsblog.specification.ArticleSpecification;
 import com.example.newsblog.persistence.dao.ArticleRepository;
 import com.example.newsblog.persistence.dto.article.ArticleSaveDto;
@@ -13,7 +13,6 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Service
 public class ArticleServiceImpl implements ArticleService {
@@ -58,7 +57,7 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     @Override
-    public Page<Article> getAll(ArticleCriteria criteria, Pageable pageable) {
+    public Page<Article> getAll(ArticleCriteriaDto criteria, Pageable pageable) {
         return articleRepository.findAll(
                 Specification
                         .where(ArticleSpecification.getArticleByUsername(criteria.getUsername()))

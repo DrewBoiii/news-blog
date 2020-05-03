@@ -16,7 +16,7 @@
                 Edited at
                 <span th:text="${#temporals.format(article.editedAt, 'dd-MM-yyyy HH:mm')}"></span>
                 by
-                <a th:href="@{|/profile/${article.user.username}|}">
+                <a th:href="@{|/home/${article.user.username}|}">
                     <span th:text="${article.user.username}"></span>
                 </a>
                 <div th:if="${#authentication.name.equals(article.user.username)}">

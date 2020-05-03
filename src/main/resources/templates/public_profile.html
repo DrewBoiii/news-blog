@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en"
+      xmlns:sec="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layout/layout}">
@@ -11,6 +12,27 @@
     <div layout:fragment="content">
         <main>
             <h3 th:text="${user.username}"></h3>
+            <h5>Roles</h5>
+            <div sec:authorize="hasAuthority('admin')">
+                <form th:action="@{/users/roles/update}" th:object="${role_dto}" method="post">
+                    <input type="hidden" name="id" th:value="${user.id}">
+                    <div th:each="role : ${roles}">
+                        <div th:if="${#lists.contains(user.roles, role)}">
+                            <label>
+                                <span th:text="${role.name}"></span>
+                                <input type="checkbox" name="roles" th:value="${role.name}" checked>
+                            </label>
+                        </div>
+                        <div th:unless="${#lists.contains(user.roles, role)}">
+                            <label>
+                                <span th:text="${role.name}"></span>
+                                <input type="checkbox" name="roles" th:value="${role.name}">
+                            </label>
+                        </div>
+                    </div>
+                    <input type="submit" value="Update">
+                </form>
+            </div>
             <p>Articles</p>
             <p>5 last articles</p>
         </main>
