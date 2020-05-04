@@ -23,23 +23,36 @@
                 </label>
                 <label>
                     Password
-                    <input type="password" name="password" th:field="*{password}"
+                    <input type="password" name="password" id="password"
+                           th:field="*{password}"
+                           onchange="checkPassword()"
                            required
-                           title="The password should have at least one upper case, one lower case, one special char
+                           title="The password should have at least 1 upper case, 1 lower case, 1 special char
                                and length should be 10 characters long"
                            pattern="^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*?[#?!@$%^&*-]).{10,128}$">
                 </label>
                 <label>
                     Confirm Password
-                    <input type="password" name="confirm" th:field="*{confirm}"
-                           required
-                           title="The password should have at least one upper case, one lower case, one special char
-                               and length should be 10 characters long"
-                           pattern="^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*?[#?!@$%^&*-]).{10,128}$">
+                    <input type="password" name="confirm" id="confirm"
+                           th:field="*{confirm}"
+                           onchange="checkPassword()"
+                           required>
                 </label>
-                <input type="submit" value="Sign Up">
+                <input type="submit" id="regBtn" value="Sign Up" disabled>
             </form>
         </main>
+        <script>
+            function checkPassword() {
+                let password, confirm;
+                password = document.getElementById('password').value;
+                confirm = document.getElementById('confirm').value;
+                if (password === confirm){
+                    document.getElementById('regBtn').removeAttribute('disabled');
+                    return;
+                }
+                document.getElementById('regBtn').setAttribute('disabled', 'disabled');
+            }
+        </script>
     </div>
 </body>
 </html>
