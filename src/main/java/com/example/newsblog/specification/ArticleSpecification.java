@@ -15,7 +15,7 @@ public class ArticleSpecification {
             public Predicate toPredicate(Root<Article> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
                 return criteriaBuilder.like(
                         criteriaBuilder.upper(root.get("title")),
-                        "%" + HtmlSanitizerUtil.sanitize(title.toUpperCase()) + "%");
+                        "%" + HtmlSanitizerUtil.sanitize(title.toUpperCase().trim()) + "%");
             }
         } : null;
     }
@@ -28,7 +28,7 @@ public class ArticleSpecification {
                         criteriaBuilder.upper(
                                 root.join("user", JoinType.LEFT).getParent().get("user").get("username")
                         ),
-                        HtmlSanitizerUtil.sanitize(username.toUpperCase())
+                        HtmlSanitizerUtil.sanitize(username.toUpperCase().trim())
                 );
             }
         } : null;

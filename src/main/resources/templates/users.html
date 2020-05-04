@@ -81,16 +81,16 @@
             <!--            pagination-->
             <div class="pagination-div">
                 <span th:if="${page.hasPrevious()}">
-                    <a th:href="@{|/users?page=${page.number - 1}&sort=${criteria.sort}|}">Previous</a>
+                    <a th:href="@{|/users?page=${page.number - 1}&sort=${criteria.sort}&order=${criteria.order}|}">Previous</a>
                 </span>
                 <th:block th:each="i: ${#numbers.sequence(0, page.totalPages - 1)}">
                     <span th:if="${page.number == i}" class="selected">[[${i}+1]]</span>
                     <span th:unless="${page.number == i}">
-                        <a th:href="@{|/users?page=${i}&sort=${criteria.sort}|}">[[${i}+1]]</a>
+                        <a th:href="@{|/users?page=${i}&sort=${criteria.sort}&order=${criteria.order}|}">[[${i}+1]]</a>
                     </span>
                 </th:block>
                 <span th:if="${page.hasNext()}">
-                    <a th:href="@{|/users?page=${page.number + 1}&sort=${criteria.sort}|}">Next</a>
+                    <a th:href="@{|/users?page=${page.number + 1}&sort=${criteria.sort}&order=${criteria.order}|}">Next</a>
                 </span>
             </div>
         </main>

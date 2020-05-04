@@ -18,7 +18,7 @@ public class UserSpecification {
             public Predicate toPredicate(Root<User> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
                 return criteriaBuilder.like(
                         criteriaBuilder.upper(root.get("username")),
-                        "%" + HtmlSanitizerUtil.sanitize(username.toUpperCase()) + "%");
+                        "%" + HtmlSanitizerUtil.sanitize(username.toUpperCase().trim()) + "%");
             }
         } : null;
     }
@@ -29,7 +29,7 @@ public class UserSpecification {
             public Predicate toPredicate(Root<User> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
                 return criteriaBuilder.like(
                         criteriaBuilder.upper(root.get("firstName")),
-                        "%" + HtmlSanitizerUtil.sanitize(firstName.toUpperCase()) + "%");
+                        "%" + HtmlSanitizerUtil.sanitize(firstName.toUpperCase().trim()) + "%");
             }
         } : null;
     }
@@ -40,7 +40,7 @@ public class UserSpecification {
             public Predicate toPredicate(Root<User> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
                 return criteriaBuilder.like(
                         criteriaBuilder.upper(root.get("lastName")),
-                        "%" + HtmlSanitizerUtil.sanitize(lastName.toUpperCase()) + "%");
+                        "%" + HtmlSanitizerUtil.sanitize(lastName.toUpperCase().trim()) + "%");
             }
         } : null;
     }
