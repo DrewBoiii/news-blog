@@ -21,5 +21,6 @@ public interface UserService {
     User getById(Long id);
     Page<User> getAll(Pageable pageable);
     Page<User> getAll(UserCriteriaDto criteria, Pageable pageable);
+    Boolean isExists(String username, String email);
 
 }

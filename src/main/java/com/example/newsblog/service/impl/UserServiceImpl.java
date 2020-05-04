@@ -119,4 +119,10 @@ public class UserServiceImpl implements UserService {
                 pageable
         );
     }
+
+    @Override
+    public Boolean isExists(String username, String email) {
+        return userRepository.existsByUsernameOrEmail(username, email);
+    }
+
 }

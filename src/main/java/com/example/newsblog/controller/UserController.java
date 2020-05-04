@@ -50,9 +50,13 @@ public class UserController {
     }
 
     @PostMapping("/registration")
-    public String saveUser(@ModelAttribute("user") RegistrationDto registrationDto) {
-        userService.save(registrationDto);
-        return "redirect:/login";
+    public String saveUser(Model model, @ModelAttribute("user") RegistrationDto registrationDto) {
+        if(!userService.isExists(registrationDto.getUsername(), registrationDto.getEmail())) {
+            userService.save(registrationDto);
+            return "redirect:/login";
+        }
+        model.addAttribute("message", "User with such username or email is already exists");
+        return "registration";
     }
 
     @GetMapping("/profile")
