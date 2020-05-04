@@ -47,6 +47,21 @@
             <!--            users-->
             <h3 th:if="${page.content.size() == 0}">Seems like there is no users :(</h3>
             <div th:each="user : ${page.content}">
+
+                <!--            image-->
+                <div th:if="${user.photo != null}">
+                    <img th:src="*{'data:image/jpg;base64,' + user.getEncodedPhoto()}"
+                         th:height="100px"
+                         th:width="100px"
+                         alt="...">
+                </div>
+                <div th:unless="${user.photo != null}">
+                    <img th:src="@{/images/anonymous.jpg}"
+                         th:height="100px"
+                         th:width="100px"
+                         alt="...">
+                </div>
+
                 <h3 th:text="${user.username}"></h3>
                 <p th:text="${user.firstName}"></p>
                 <p th:text="${user.lastName}"></p>

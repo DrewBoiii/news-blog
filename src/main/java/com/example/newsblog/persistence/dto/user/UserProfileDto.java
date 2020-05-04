@@ -1,6 +1,7 @@
 package com.example.newsblog.persistence.dto.user;
 
 import lombok.Data;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
@@ -18,5 +19,7 @@ public class UserProfileDto {
     private String lastName;
 
     private String birth;
+
+    private MultipartFile photo;
 
 }

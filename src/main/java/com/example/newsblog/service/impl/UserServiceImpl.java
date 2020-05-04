@@ -10,6 +10,7 @@ import com.example.newsblog.persistence.model.User;
 import com.example.newsblog.service.RoleService;
 import com.example.newsblog.service.UserService;
 import com.example.newsblog.specification.UserSpecification;
+import com.example.newsblog.util.ImageUploadUtil;
 import com.example.newsblog.util.RoleConstants;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -18,6 +19,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -51,13 +53,25 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void update(UserProfileDto userProfileDto) {
+    public void update(UserProfileDto userProfileDto) throws IOException {
         User user = userRepository.findById(userProfileDto.getId()).orElse(null);
         user.setFirstName(userProfileDto.getFirstName());
         user.setLastName(userProfileDto.getLastName());
         LocalDate date = LocalDate.parse(userProfileDto.getBirth());
         LocalDateTime dateTime = LocalDateTime.of(date, LocalTime.MIN);
         user.setBirth(dateTime);
+
+        byte[] userPhoto;
+        try {
+            userPhoto = ImageUploadUtil.avatarConvert(userProfileDto.getPhoto());
+            if (userPhoto == null) {
+                log.error("PHOTO IS NULL");
+            }
+            user.setPhoto(userPhoto);
+        } catch (IOException e) {
+            throw new IOException();
+        }
+
         userRepository.save(user);
     }
 

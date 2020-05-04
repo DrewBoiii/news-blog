@@ -4,11 +4,14 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Type;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
+import java.util.Base64;
 import java.util.Collection;
 import java.util.Set;
 
@@ -44,6 +47,11 @@ public class User extends AbstractEntity implements UserDetails {
     @Column
     private LocalDateTime birth;
 
+    @Lob
+    @Type(type = "org.hibernate.type.BinaryType")
+    @Column(columnDefinition = "bytea")
+    private byte[] photo;
+
     @PrePersist
     void createdAt(){
         this.createdAt = LocalDateTime.now();
@@ -73,4 +81,10 @@ public class User extends AbstractEntity implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
+
+    public String getEncodedPhoto() {
+        byte[] encodedImage = Base64.getEncoder().encode(this.photo);
+        return new String(encodedImage, StandardCharsets.UTF_8);
+    }
+
 }

@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 @Slf4j
@@ -66,9 +67,8 @@ public class UserController {
     @PostMapping("/profile/update")
     @PreAuthorize("hasAuthority('user')")
     public String updateProfile(@ModelAttribute("user_dto") UserProfileDto userProfileDto,
-                                @AuthenticationPrincipal User authUser) {
+                                @AuthenticationPrincipal User authUser) throws IOException {
         com.example.newsblog.persistence.model.User user = userService.getByUsername(authUser.getUsername());
-        userProfileDto.setId(user.getId());
         userService.update(userProfileDto);
         return "redirect:/profile";
     }
@@ -99,6 +99,7 @@ public class UserController {
     }
 
     @PostMapping("/users/roles/update")
+    @PreAuthorize("hasAuthority('admin')")
     public String updateUserRoles(@ModelAttribute("role_dto") UserRolesUpdateDto userRolesUpdateDto,
                                   @AuthenticationPrincipal User user) {
         userService.update(userRolesUpdateDto);

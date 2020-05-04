@@ -1,7 +1,7 @@
 package com.example.newsblog.specification;
 
 import com.example.newsblog.persistence.model.User;
-import com.example.newsblog.util.HtmlSanitizer;
+import com.example.newsblog.util.HtmlSanitizerUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.jpa.domain.Specification;
 
@@ -18,7 +18,7 @@ public class UserSpecification {
             public Predicate toPredicate(Root<User> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
                 return criteriaBuilder.like(
                         criteriaBuilder.upper(root.get("username")),
-                        "%" + HtmlSanitizer.sanitize(username.toUpperCase()) + "%");
+                        "%" + HtmlSanitizerUtil.sanitize(username.toUpperCase()) + "%");
             }
         } : null;
     }
@@ -29,7 +29,7 @@ public class UserSpecification {
             public Predicate toPredicate(Root<User> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
                 return criteriaBuilder.like(
                         criteriaBuilder.upper(root.get("firstName")),
-                        "%" + HtmlSanitizer.sanitize(firstName.toUpperCase()) + "%");
+                        "%" + HtmlSanitizerUtil.sanitize(firstName.toUpperCase()) + "%");
             }
         } : null;
     }
@@ -40,7 +40,7 @@ public class UserSpecification {
             public Predicate toPredicate(Root<User> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
                 return criteriaBuilder.like(
                         criteriaBuilder.upper(root.get("lastName")),
-                        "%" + HtmlSanitizer.sanitize(lastName.toUpperCase()) + "%");
+                        "%" + HtmlSanitizerUtil.sanitize(lastName.toUpperCase()) + "%");
             }
         } : null;
     }

@@ -12,9 +12,25 @@
     <div layout:fragment="content">
         <main>
             <h3 th:text="${user.username}"></h3>
-            <h5>Roles</h5>
+
+            <!--            image-->
+            <div th:if="${user.photo != null}">
+                <img th:src="*{'data:image/jpg;base64,' + user.getEncodedPhoto()}"
+                     th:height="200px"
+                     th:width="200px"
+                     alt="...">
+            </div>
+            <div th:unless="${user.photo != null}">
+                <img th:src="@{/images/anonymous.jpg}"
+                     th:height="200px"
+                     th:width="200px"
+                     alt="...">
+            </div>
+
+            <!--            roles-->
             <div sec:authorize="hasAuthority('admin')">
                 <form th:action="@{/users/roles/update}" th:object="${role_dto}" method="post">
+                    <h5>Roles</h5>
                     <input type="hidden" name="id" th:value="${user.id}">
                     <div th:each="role : ${roles}">
                         <div th:if="${#lists.contains(user.roles, role)}">
@@ -33,6 +49,8 @@
                     <input type="submit" value="Update">
                 </form>
             </div>
+
+            <!--            articles-->
             <p>Articles</p>
             <p>5 last articles</p>
         </main>

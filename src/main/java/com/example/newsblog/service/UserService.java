@@ -8,10 +8,12 @@ import com.example.newsblog.persistence.model.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.io.IOException;
+
 public interface UserService {
 
     void save(RegistrationDto registrationDto);
-    void update(UserProfileDto userProfileDto);
+    void update(UserProfileDto userProfileDto) throws IOException;
     void update(UserRolesUpdateDto userRolesUpdateDto);
     void deleteByUsername(String username);
     void deleteById(Long id);
