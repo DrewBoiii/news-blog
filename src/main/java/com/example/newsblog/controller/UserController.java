@@ -59,6 +59,15 @@ public class UserController {
         return "registration";
     }
 
+    @GetMapping("/activation/{code}")
+    public String getActivationPage(Model model, @PathVariable("code") String code) {
+        model.addAttribute("message", "Activation code is not found.");
+        if(userService.isActivate(code)) {
+            model.addAttribute("message", "Account is activated!");
+        }
+        return "login";
+    }
+
     @GetMapping("/profile")
     @PreAuthorize("hasAuthority('user')")
     public String getProfilePage(Model model, @AuthenticationPrincipal User authUser) {

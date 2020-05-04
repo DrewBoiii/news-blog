@@ -3,16 +3,16 @@ package com.example.newsblog.config;
 import com.example.newsblog.persistence.model.Role;
 import com.example.newsblog.service.RoleService;
 import com.example.newsblog.util.RoleConstants;
-import org.springframework.stereotype.Component;
+import org.springframework.context.annotation.Configuration;
 
 import javax.annotation.PostConstruct;
 
-@Component
-public class InitOnStartupConfigTemp {
+@Configuration
+public class ApplicationConfig {
 
     private final RoleService roleService;
 
-    public InitOnStartupConfigTemp(RoleService roleService) {
+    public ApplicationConfig(RoleService roleService) {
         this.roleService = roleService;
     }
 

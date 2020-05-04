@@ -22,5 +22,6 @@ public interface UserService {
     Page<User> getAll(Pageable pageable);
     Page<User> getAll(UserCriteriaDto criteria, Pageable pageable);
     Boolean isExists(String username, String email);
+    Boolean isActivate(String code);
 
 }

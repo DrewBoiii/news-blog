@@ -7,6 +7,7 @@ import com.example.newsblog.persistence.dto.user.UserProfileDto;
 import com.example.newsblog.persistence.dto.user.UserRolesUpdateDto;
 import com.example.newsblog.persistence.model.Role;
 import com.example.newsblog.persistence.model.User;
+import com.example.newsblog.service.MailService;
 import com.example.newsblog.service.RoleService;
 import com.example.newsblog.service.UserService;
 import com.example.newsblog.specification.UserSpecification;
@@ -26,6 +27,7 @@ import java.time.LocalTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 
 @Slf4j
 @Service
@@ -34,22 +36,38 @@ public class UserServiceImpl implements UserService {
     private UserRepository userRepository;
     private PasswordEncoder passwordEncoder;
     private RoleService roleService;
+    private MailService mailService;
 
-    public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder, RoleService roleService) {
+    public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder, RoleService roleService, MailService mailService) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.roleService = roleService;
+        this.mailService = mailService;
     }
 
     @Override
     public void save(RegistrationDto registrationDto) {
         User user = new User();
+
         user.setUsername(registrationDto.getUsername());
         user.setPassword(passwordEncoder.encode(registrationDto.getPassword()));
-        user.setEmail(registrationDto.getEmail());
         user.setRoles(Collections.singleton(roleService.getByName(RoleConstants.USER_ROLE)));
         user.setBirth(LocalDateTime.now());
+        user.setEmail(registrationDto.getEmail());
+        user.setActivationCode(UUID.randomUUID().toString());
+
         userRepository.save(user);
+
+        String message = String.format(
+                "Hello, %s! \n" +
+                "Welcome to the News Blog!\n" +
+                "Please follow the link below to activate your account\n" +
+                "http://localhost:8080/activation/%s",
+                user.getUsername(),
+                user.getActivationCode()
+        );
+
+        mailService.send(user.getEmail(), "Account activation", message);
     }
 
     @Override
@@ -125,4 +143,17 @@ public class UserServiceImpl implements UserService {
         return userRepository.existsByUsernameOrEmail(username, email);
     }
 
+    @Override
+    public Boolean isActivate(String code) {
+        User user = userRepository.findByActivationCode(code).orElse(null);
+
+        if(user != null) {
+            user.setActive(true);
+            user.setActivationCode(null);
+            userRepository.save(user);
+            return true;
+        }
+
+        return false;
+    }
 }

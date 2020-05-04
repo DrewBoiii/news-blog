@@ -32,6 +32,12 @@ public class User extends AbstractEntity implements UserDetails {
     @Column(unique = true, nullable = false)
     private String email;
 
+    @Column
+    private String activationCode;
+
+    @Column
+    private Boolean active;
+
     @ManyToMany(fetch = FetchType.EAGER)
     private Set<Role> roles;
 
