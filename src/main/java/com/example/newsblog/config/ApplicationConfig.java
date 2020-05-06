@@ -3,6 +3,8 @@ package com.example.newsblog.config;
 import com.example.newsblog.persistence.model.Role;
 import com.example.newsblog.service.RoleService;
 import com.example.newsblog.util.RoleConstants;
+import org.modelmapper.ModelMapper;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import javax.annotation.PostConstruct;
@@ -26,6 +28,11 @@ public class ApplicationConfig {
             roleService.save(moderRole);
             roleService.save(adminRole);
         }
+    }
+
+    @Bean
+    public ModelMapper modelMapper() {
+        return new ModelMapper();
     }
 
 }

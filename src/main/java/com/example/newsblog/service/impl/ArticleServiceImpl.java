@@ -7,6 +7,7 @@ import com.example.newsblog.persistence.dto.article.ArticleSaveDto;
 import com.example.newsblog.persistence.dto.article.ArticleUpdateDto;
 import com.example.newsblog.persistence.model.Article;
 import com.example.newsblog.service.ArticleService;
+import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -17,26 +18,25 @@ import java.time.LocalDateTime;
 @Service
 public class ArticleServiceImpl implements ArticleService {
 
-    private ArticleRepository articleRepository;
+    private final ArticleRepository articleRepository;
+    private final ModelMapper modelMapper;
 
-    public ArticleServiceImpl(ArticleRepository articleRepository) {
+    public ArticleServiceImpl(ArticleRepository articleRepository, ModelMapper modelMapper) {
         this.articleRepository = articleRepository;
+        this.modelMapper = modelMapper;
     }
 
     @Override
-    public Long save(ArticleSaveDto articleSaveDto) {
-        Article article = new Article();
-        article.setTitle(articleSaveDto.getTitle());
-        article.setContent(articleSaveDto.getContent());
-        article.setUser(articleSaveDto.getUser());
+    public Long save(ArticleSaveDto dto) {
+        Article article = modelMapper.map(dto, Article.class);
         return articleRepository.save(article).getId();
     }
 
     @Override
-    public void update(ArticleUpdateDto articleUpdateDto) {
-        Article article = articleRepository.findById(articleUpdateDto.getId()).orElse(null);
-        article.setTitle(articleUpdateDto.getTitle());
-        article.setContent(articleUpdateDto.getContent());
+    public void update(ArticleUpdateDto dto) {
+        Article article = articleRepository.findById(dto.getId()).orElse(null);
+        article.setTitle(dto.getTitle());
+        article.setContent(dto.getContent());
         article.setEditedAt(LocalDateTime.now());
         articleRepository.save(article);
     }

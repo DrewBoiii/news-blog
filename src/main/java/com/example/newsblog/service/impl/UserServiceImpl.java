@@ -12,8 +12,10 @@ import com.example.newsblog.service.RoleService;
 import com.example.newsblog.service.UserService;
 import com.example.newsblog.specification.UserSpecification;
 import com.example.newsblog.util.ImageUploadUtil;
+import com.example.newsblog.util.MailUtil;
 import com.example.newsblog.util.RoleConstants;
 import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -27,34 +29,33 @@ import java.time.LocalTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
-import java.util.UUID;
 
 @Slf4j
 @Service
 public class UserServiceImpl implements UserService {
 
-    private UserRepository userRepository;
-    private PasswordEncoder passwordEncoder;
-    private RoleService roleService;
-    private MailService mailService;
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final RoleService roleService;
+    private final MailService mailService;
+    private final ModelMapper modelMapper;
 
-    public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder, RoleService roleService, MailService mailService) {
+    public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder, RoleService roleService, MailService mailService, ModelMapper modelMapper) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.roleService = roleService;
         this.mailService = mailService;
+        this.modelMapper = modelMapper;
     }
 
     @Override
-    public void save(RegistrationDto registrationDto) {
-        User user = new User();
+    public void save(RegistrationDto dto) {
+        User user = modelMapper.map(dto, User.class);
 
-        user.setUsername(registrationDto.getUsername());
-        user.setPassword(passwordEncoder.encode(registrationDto.getPassword()));
+        user.setPassword(passwordEncoder.encode(dto.getPassword()));
         user.setRoles(Collections.singleton(roleService.getByName(RoleConstants.USER_ROLE)));
         user.setBirth(LocalDateTime.now());
-        user.setEmail(registrationDto.getEmail());
-        user.setActivationCode(UUID.randomUUID().toString());
+        user.setActivationCode(MailUtil.getGeneratedCode());
 
         userRepository.save(user);
 
@@ -71,17 +72,19 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void update(UserProfileDto userProfileDto) throws IOException {
-        User user = userRepository.findById(userProfileDto.getId()).orElse(null);
-        user.setFirstName(userProfileDto.getFirstName());
-        user.setLastName(userProfileDto.getLastName());
-        LocalDate date = LocalDate.parse(userProfileDto.getBirth());
+    public void update(UserProfileDto dto) throws IOException {
+        User user = userRepository.findById(dto.getId()).orElse(null);
+
+        user.setFirstName(dto.getFirstName());
+        user.setLastName(dto.getLastName());
+
+        LocalDate date = LocalDate.parse(dto.getBirth());
         LocalDateTime dateTime = LocalDateTime.of(date, LocalTime.MIN);
         user.setBirth(dateTime);
 
         byte[] userPhoto;
         try {
-            userPhoto = ImageUploadUtil.avatarConvert(userProfileDto.getPhoto());
+            userPhoto = ImageUploadUtil.avatarConvert(dto.getPhoto());
             if (userPhoto == null) {
                 log.error("PHOTO IS NULL");
             }
