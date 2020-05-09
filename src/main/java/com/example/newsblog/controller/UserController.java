@@ -1,12 +1,15 @@
 package com.example.newsblog.controller;
 
+import com.example.newsblog.persistence.dto.captcha.CaptchaResponseDto;
 import com.example.newsblog.persistence.dto.user.RegistrationDto;
 import com.example.newsblog.persistence.dto.user.UserCriteriaDto;
 import com.example.newsblog.persistence.dto.user.UserProfileDto;
 import com.example.newsblog.persistence.dto.user.UserRolesUpdateDto;
+import com.example.newsblog.service.CaptchaService;
 import com.example.newsblog.service.RoleService;
 import com.example.newsblog.service.UserService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -16,10 +19,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -30,12 +30,17 @@ public class UserController {
 
     public static final int ITEMS_PER_PAGE = 5;
 
+    @Value("${recaptcha.site}")
+    private String siteKey;
+
     private final UserService userService;
     private final RoleService roleService;
+    private final CaptchaService captchaService;
 
-    public UserController(UserService userService, RoleService roleService) {
+    public UserController(UserService userService, RoleService roleService, CaptchaService captchaService) {
         this.userService = userService;
         this.roleService = roleService;
+        this.captchaService = captchaService;
     }
 
     @GetMapping("/login")
@@ -46,16 +51,24 @@ public class UserController {
     @GetMapping("/registration")
     public String getRegistrationPage(Model model) {
         model.addAttribute("user", new RegistrationDto());
+        model.addAttribute("siteKey", System.getenv(siteKey));
         return "registration";
     }
 
     @PostMapping("/registration")
-    public String saveUser(Model model, @ModelAttribute("user") RegistrationDto registrationDto) {
+    public String saveUser(Model model,
+                           @ModelAttribute("user") RegistrationDto registrationDto,
+                           @RequestParam("g-recaptcha-response") String captchaResponse) {
+        CaptchaResponseDto responseDto = captchaService.getCaptchaResponseDto(captchaResponse);
+        if(!responseDto.isSuccess()) {
+            model.addAttribute("message", "captcha verification failed.");
+            return "registration";
+        }
+        model.addAttribute("message", "User with such username or email is already exists.");
         if(!userService.isExists(registrationDto.getUsername(), registrationDto.getEmail())) {
             userService.save(registrationDto);
-            return "redirect:/login";
+            model.addAttribute("message", "You're successfully signed up! Please confirm your email to activate account.");
         }
-        model.addAttribute("message", "User with such username or email is already exists");
         return "registration";
     }
 

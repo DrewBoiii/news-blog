@@ -10,6 +10,9 @@
 <body>
     <div layout:fragment="content">
         <main>
+            <div th:if="${message != null}">
+                <p th:text="${message}"></p>
+            </div>
             <form th:action="@{/login}" method="post">
                 <label>
                     Username

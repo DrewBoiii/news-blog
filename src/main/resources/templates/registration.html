@@ -8,39 +8,45 @@
     <title>Registration</title>
 </head>
 <body>
-    <div layout:fragment="content">
-        <main>
-            <form th:action="@{/registration}" method="post" th:object="${user}">
-                <label>
-                    Username
-                    <input type="text" name="username" th:field="*{username}"
-                           autofocus required>
-                </label>
-                <label>
-                    Email
-                    <input type="email" name="email" th:field="*{email}"
-                           required>
-                </label>
-                <label>
-                    Password
-                    <input type="password" name="password" id="password"
-                           th:field="*{password}"
-                           onchange="checkPassword()"
-                           required
-                           title="The password should have at least 1 upper case, 1 lower case, 1 special char
+<div layout:fragment="content">
+    <main>
+        <div th:if="${message != null}">
+            <p th:text="${message}"></p>
+        </div>
+        <form th:action="@{/registration}" method="post" th:object="${user}">
+            <label>
+                Username
+                <input type="text" name="username" th:field="*{username}"
+                       autofocus required>
+            </label>
+            <label>
+                Email
+                <input type="email" name="email" th:field="*{email}"
+                       required>
+            </label>
+            <label>
+                Password
+                <input type="password" name="password" id="password"
+                       th:field="*{password}"
+                       onchange="checkPassword()"
+                       required
+                       title="The password should have at least 1 upper case, 1 lower case, 1 special char
                                and length should be 10 characters long"
-                           pattern="^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*?[#?!@$%^&*-]).{10,128}$">
-                </label>
-                <label>
-                    Confirm Password
-                    <input type="password" name="confirm" id="confirm"
-                           th:field="*{confirm}"
-                           onchange="checkPassword()"
-                           required>
-                </label>
-                <input type="submit" id="regBtn" value="Sign Up" disabled>
-            </form>
-        </main>
-    </div>
+                       pattern="^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*?[#?!@$%^&*-]).{10,128}$">
+            </label>
+            <label>
+                Confirm Password
+                <input type="password" name="confirm" id="confirm"
+                       th:field="*{confirm}"
+                       onchange="checkPassword()"
+                       required>
+            </label>
+            <div>
+                <div class="g-recaptcha" th:data-sitekey="${siteKey}"></div>
+            </div>
+            <input type="submit" id="regBtn" value="Sign Up" disabled>
+        </form>
+    </main>
+</div>
 </body>
 </html>
