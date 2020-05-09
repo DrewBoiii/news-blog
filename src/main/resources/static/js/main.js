@@ -3,8 +3,8 @@ function checkPassword() {
     password = document.getElementById('password').value;
     confirm = document.getElementById('confirm').value;
     if (password === confirm){
-        document.getElementById('regBtn').removeAttribute('disabled');
+        document.getElementById('btn').removeAttribute('disabled');
         return;
     }
-    document.getElementById('regBtn').setAttribute('disabled', 'disabled');
+    document.getElementById('btn').setAttribute('disabled', 'disabled');
 }

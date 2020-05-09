@@ -17,7 +17,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Documented
 public @interface ValidPassword {
 
-    String message() default "Invalid password";
+    String message() default "Weak password!";
     Class<?>[] groups() default {};
     Class<? extends Payload>[] payload() default {};
 

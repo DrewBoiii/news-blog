@@ -53,10 +53,32 @@
                 <input type="file" name="photo">
                 <input type="submit" value="Update">
             </form>
+
             <p>Age <span th:text="${user.birth.now().year - user.birth.year}"></span> years old</p>
             <p>Account was created at <span th:text="${#temporals.format(user.createdAt, 'dd-MM-yyyy HH:mm')}"></span></p>
+
+            <form th:action="@{/password/change}" th:object="${pass_dto}" method="post">
+                <input type="hidden" name="id" th:value="${user.id}">
+                <label>
+                    Old password
+                    <input name="old" type="password" required>
+                </label>
+                <label>
+                    New password
+                <input name="password" id="password" type="password" onchange="checkPassword()" required
+                       title="The password should have at least 1 upper case, 1 lower case, 1 special char
+                               and length should be 10 characters long"
+                       pattern="^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*?[#?!@$%^&*-]).{10,128}$">
+                </label>
+                <label>
+                    Confirm new password
+                    <input name="confirm" id="confirm" type="password" onchange="checkPassword()" required>
+                </label>
+                <input type="submit" id="btn" value="Change" disabled>
+            </form>
+
             <hr>
-            <a th:href="@{/logout}">Sign out</a>
+            <p><a th:href="@{/logout}">Sign out</a></p>
         </main>
     </div>
 </body>

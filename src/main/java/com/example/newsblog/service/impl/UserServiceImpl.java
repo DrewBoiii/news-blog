@@ -1,10 +1,7 @@
 package com.example.newsblog.service.impl;
 
 import com.example.newsblog.persistence.dao.UserRepository;
-import com.example.newsblog.persistence.dto.user.RegistrationDto;
-import com.example.newsblog.persistence.dto.user.UserCriteriaDto;
-import com.example.newsblog.persistence.dto.user.UserProfileDto;
-import com.example.newsblog.persistence.dto.user.UserRolesUpdateDto;
+import com.example.newsblog.persistence.dto.user.*;
 import com.example.newsblog.persistence.model.Role;
 import com.example.newsblog.persistence.model.User;
 import com.example.newsblog.service.MailService;
@@ -102,6 +99,13 @@ public class UserServiceImpl implements UserService {
         Set<Role> roles = user.getRoles();
         List<String> roleNames = userRolesUpdateDto.getRoles();
         roleNames.forEach(roleName -> roles.add(roleService.getByName(roleName)));
+        userRepository.save(user);
+    }
+
+    @Override
+    public void update(ChangePasswordDto changePasswordDto) {
+        User user = userRepository.findById(changePasswordDto.getId()).orElse(null);
+        user.setPassword(passwordEncoder.encode(changePasswordDto.getPassword()));
         userRepository.save(user);
     }
 
