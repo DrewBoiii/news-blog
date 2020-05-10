@@ -35,6 +35,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                             "/registration",
                             "/articles/*",
                             "/activation/*",
+                            "/password/reset",
                             "/js/**",
                             "/css/**",
                             "/images/**"
@@ -47,6 +48,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                     .loginPage("/login")
                     .permitAll()
                 .and()
+                    .rememberMe()
+                .and()
                     .logout()
                     .invalidateHttpSession(true)
                     .clearAuthentication(true)
@@ -54,7 +57,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                     .logoutSuccessUrl("/login?logout")
                     .permitAll()
                 .and()
-                    .csrf().disable();
+                    .csrf()
+                    .disable();
     }
 
     @Override
