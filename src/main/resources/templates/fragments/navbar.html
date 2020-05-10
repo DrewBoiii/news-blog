@@ -17,6 +17,9 @@
                     <li sec:authorize="hasAuthority('user')">
                         <a th:href="@{/editor}">Add</a>
                     </li>
+                    <li sec:authorize="hasAuthority('user')">
+                        <a href="#">Subscriptions</a>
+                    </li>
                     <li sec:authorize="hasAuthority('admin')">
                         <a th:href="@{/users}">Users</a>
                     </li>

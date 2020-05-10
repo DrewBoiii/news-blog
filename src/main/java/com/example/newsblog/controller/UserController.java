@@ -6,8 +6,6 @@ import com.example.newsblog.service.CaptchaService;
 import com.example.newsblog.service.RoleService;
 import com.example.newsblog.service.UserService;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -16,7 +14,6 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.User;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -30,58 +27,22 @@ public class UserController {
 
     public static final int ITEMS_PER_PAGE = 5;
 
-    @Value("${recaptcha.site}")
-    private String siteKey;
-
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-
     private final UserService userService;
     private final RoleService roleService;
-    private final CaptchaService captchaService;
 
-    public UserController(UserService userService, RoleService roleService, CaptchaService captchaService) {
+
+    public UserController(UserService userService, RoleService roleService) {
         this.userService = userService;
         this.roleService = roleService;
-        this.captchaService = captchaService;
     }
 
-    @GetMapping("/login")
-    public String getLoginPage() {
-        return "login";
-    }
-
-    @GetMapping("/registration")
-    public String getRegistrationPage(Model model) {
-        model.addAttribute("user", new RegistrationDto());
-        model.addAttribute("siteKey", System.getenv(siteKey));
-        return "registration";
-    }
-
-    @PostMapping("/registration")
-    public String saveUser(Model model,
-                           @ModelAttribute("user") RegistrationDto dto,
-                           @RequestParam("g-recaptcha-response") String captchaResponse) {
-        CaptchaResponseDto responseDto = captchaService.getCaptchaResponseDto(captchaResponse);
-        if(!responseDto.isSuccess()) {
-            model.addAttribute("message", "captcha verification failed.");
-            return "registration";
-        }
-        model.addAttribute("message", "User with such username or email is already exists.");
-        if(!userService.isExists(dto.getUsername(), dto.getEmail())) {
-            userService.save(dto);
-            model.addAttribute("message", "You're successfully signed up! Please confirm your email to activate account.");
-        }
-        return "registration";
-    }
-
-    @GetMapping("/activation/{code}")
-    public String getActivationPage(Model model, @PathVariable("code") String code) {
-        model.addAttribute("message", "Activation code is not found.");
-        if(userService.isActivate(code)) {
-            model.addAttribute("message", "Account is activated!");
-        }
-        return "login";
+    @GetMapping("/home/{username}")
+    public String getPublicProfile(@PathVariable("username") String username, Model model) {
+        com.example.newsblog.persistence.model.User user = userService.getByUsername(username);
+        model.addAttribute("user", user);
+        model.addAttribute("roles", new ArrayList<>(roleService.getAll()));
+        model.addAttribute("role_dto", new UserRolesUpdateDto());
+        return "public_profile";
     }
 
     @GetMapping("/profile")
@@ -101,33 +62,6 @@ public class UserController {
         com.example.newsblog.persistence.model.User user = userService.getByUsername(authUser.getUsername());
         userService.update(dto);
         return "redirect:/profile";
-    }
-
-    @PostMapping("/password/change")
-    @PreAuthorize("hasAuthority('user')")
-    public String changePassword(Model model,
-                                 @ModelAttribute("pass_dto") ChangePasswordDto dto,
-                                 @AuthenticationPrincipal User authUser) {
-        com.example.newsblog.persistence.model.User user = userService.getByUsername(authUser.getUsername());
-        if(!passwordEncoder.matches(dto.getOld(), user.getPassword())) {
-            model.addAttribute("message", "Incorrect old password!");
-            return "private_profile";
-        }
-        if(!StringUtils.equals(dto.getPassword(), dto.getConfirm())) {
-            model.addAttribute("message", "Passwords do not match!");
-            return "private_profile";
-        }
-        userService.update(dto);
-        return "redirect:/profile";
-    }
-
-    @GetMapping("/home/{username}")
-    public String getPublicProfile(@PathVariable("username") String username, Model model) {
-        com.example.newsblog.persistence.model.User user = userService.getByUsername(username);
-        model.addAttribute("user", user);
-        model.addAttribute("roles", new ArrayList<>(roleService.getAll()));
-        model.addAttribute("role_dto", new UserRolesUpdateDto());
-        return "public_profile";
     }
 
 
@@ -153,7 +87,5 @@ public class UserController {
         userService.update(userRolesUpdateDto);
         return "redirect:/users";
     }
-
-
 
 }
